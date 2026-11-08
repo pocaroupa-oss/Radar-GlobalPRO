@@ -199,7 +199,7 @@
         <option value="Indústria">🏭 Indústria & Materiais</option>
         <option value="Cripto">🪙 Cripto-Stocks</option>
       </select>
-      <input id="pesquisa" oninput="renderizar()" type="text" placeholder="🔍 Pesquisar ticker ou empresa...">
+      <input id="pesquisa" oninput="renderizar()" type="text" placeholder="🔍 Pesquisar ticker ou empresa (ex: BYD, Nike)...">
     </div>
 
     <div class="filtros">
@@ -216,13 +216,18 @@
 
   <script>
     let sinalAtivo = "TODOS";
-    let segundosRestantes = 120; // 2 minutos
+    let segundosRestantes = 120;
 
     const ativos = [
       { t: "VWCE", n: "Vanguard FTSE All-World", s: "ETF", tipo: "ACUMULATIVO", p: "€125.40", pe: "22.5", dec: "COMPRAR", av: "PREÇO JUSTO", pot: "MUITO POTENCIAL", nota: "O ETF global definitivo para DCA de longo prazo." },
       { t: "VUAA", n: "Vanguard S&P 500", s: "ETF", tipo: "ACUMULATIVO", p: "€102.80", pe: "25.0", dec: "COMPRAR", av: "PREÇO JUSTO", pot: "MUITO POTENCIAL", nota: "As 500 maiores empresas dos EUA." },
       { t: "EQQQ", n: "Invesco Nasdaq-100", s: "ETF", tipo: "ACUMULATIVO", p: "€450.20", pe: "28.5", dec: "COMPRAR", av: "BARATO", pot: "MUITO POTENCIAL", nota: "Foco total nas 100 maiores tecnológicas dos EUA." },
       { t: "VHYL", n: "Vanguard High Dividend Yield", s: "ETF", tipo: "DIVIDENDOS", p: "€64.50", pe: "15.2", dec: "COMPRAR", av: "BARATO", pot: "BOM POTENCIAL", nota: "ETF global focado em empresas pagadoras de dividendos." },
+      { t: "BYDDY", n: "BYD Company Ltd.", s: "Consumo", tipo: "ACUMULATIVO", p: "$28.50", pe: "18.5", dec: "COMPRAR", av: "BARATO", pot: "MUITO POTENCIAL", nota: "Líder global em veículos elétricos e baterias com forte integração vertical." },
+      { t: "NKE", n: "Nike Inc.", s: "Consumo", tipo: "DIVIDENDOS", p: "$78.20", pe: "24.5", dec: "AGUARDAR", av: "BARATO", pot: "BOM POTENCIAL", nota: "Líder global em calçado e vestuário desportivo; reestruturação em curso." },
+      { t: "MP", n: "MP Materials Corp.", s: "Indústria", tipo: "ACUMULATIVO", p: "$18.50", pe: "28.0", dec: "AGUARDAR", av: "BARATO", pot: "MUITO POTENCIAL", nota: "Principal produtor ocidental de terras raras e ímanes permanentes." },
+      { t: "GLW", n: "Corning Inc.", s: "Indústria", tipo: "DIVIDENDOS", p: "$45.80", pe: "21.0", dec: "COMPRAR", av: "BARATO", pot: "MUITO POTENCIAL", nota: "Fibra ótica e vidro avançado para infraestruturas de dados." },
+      { t: "MOG.A", n: "Moog Inc.", s: "Indústria", tipo: "DIVIDENDOS", p: "$175.00", pe: "22.5", dec: "COMPRAR", av: "PREÇO JUSTO", pot: "BOM POTENCIAL", nota: "Sistemas de controlo de precisão para aeroespacial e defesa." },
       { t: "MSFT", n: "Microsoft Corp.", s: "Tecnologia", tipo: "ACUMULATIVO", p: "$428.50", pe: "31.2", dec: "COMPRAR", av: "PREÇO JUSTO", pot: "MUITO POTENCIAL", nota: "Líder em Cloud Azure e IA empresarial." },
       { t: "AAPL", n: "Apple Inc.", s: "Tecnologia", tipo: "ACUMULATIVO", p: "$225.00", pe: "32.0", dec: "AGUARDAR", av: "PREÇO JUSTO", pot: "BOM POTENCIAL", nota: "Ecossistema incomparável, múltiplo esticado." },
       { t: "ASML", n: "ASML Holding", s: "Tecnologia", tipo: "ACUMULATIVO", p: "€685.00", pe: "28.5", dec: "COMPRAR", av: "BARATO", pot: "MUITO POTENCIAL", nota: "Monopólio de litografia EUV para semicondutores." },
@@ -232,7 +237,7 @@
       { t: "SNPS", n: "Synopsys Inc.", s: "Tecnologia", tipo: "ACUMULATIVO", p: "$520.00", pe: "38.0", dec: "COMPRAR", av: "PREÇO JUSTO", pot: "MUITO POTENCIAL", nota: "Software de design eletrónico (EDA)." },
       { t: "NXPI", n: "NXP Semiconductors", s: "Tecnologia", tipo: "DIVIDENDOS", p: "$215.00", pe: "17.0", dec: "COMPRAR", av: "BARATO", pot: "BOM POTENCIAL", nota: "Semicondutores automotivos e industriais." },
       { t: "ANET", n: "Arista Networks", s: "Tecnologia", tipo: "ACUMULATIVO", p: "$390.00", pe: "39.0", dec: "COMPRAR", av: "PREÇO JUSTO", pot: "MUITO POTENCIAL", nota: "Switches de rede de alta velocidade para IA." },
-      { t: "APP", n: "AppLovin Corp.", s: "Tecnologia", tipo: "ACUMULATIVO", p: "$285.00", pe: "34.0", dec: "COMPRAR", av: "PREÇO JUSTO", pot: "MUITO POTENCIAL", nota: "Monetização mobile potenciada por IA." },
+      { t: "APP", n: "AppLovin Corp.", s: "Tecnologia", tipo: "ACUMULATIVO", p: "$285.00", pe: "34.0", dec: "COMPRAR", av: "PREÇO JUSTO", pot: "MUITO POTENCIAL", nota: "Monotização mobile potenciada por IA." },
       { t: "LITE", n: "Lumentum Holdings", s: "Tecnologia", tipo: "ACUMULATIVO", p: "$68.20", pe: "29.0", dec: "COMPRAR", av: "BARATO", pot: "MUITO POTENCIAL", nota: "Componentes óticos para redes e Data Centers." },
       { t: "CRDO", n: "Credo Technology", s: "Tecnologia", tipo: "ACUMULATIVO", p: "$38.50", pe: "45.0", dec: "AGUARDAR", av: "CARO", pot: "MUITO POTENCIAL", nota: "Conectividade de alta velocidade para centros de dados." },
       { t: "NOK", n: "Nokia Oyj", s: "Tecnologia", tipo: "DIVIDENDOS", p: "€4.10", pe: "14.0", dec: "AGUARDAR", av: "MUITO BARATO", pot: "POUCO", nota: "Equipamentos de rede 5G." },
@@ -263,7 +268,6 @@
       { t: "KO", n: "Coca-Cola Co.", s: "Consumo", tipo: "DIVIDENDOS", p: "$65.80", pe: "22.8", dec: "COMPRAR", av: "BARATO", pot: "BOM POTENCIAL", nota: "Dividend King com 60+ anos de aumentos." },
       { t: "WYNN", n: "Wynn Resorts", s: "Consumo", tipo: "DIVIDENDOS", p: "$88.40", pe: "18.0", dec: "AGUARDAR", av: "BARATO", pot: "BOM POTENCIAL", nota: "Resorts de luxo e jogo (Las Vegas e Macau)." },
       { t: "RH", n: "Restoration Hardware", s: "Consumo", tipo: "ACUMULATIVO", p: "$315.00", pe: "26.0", dec: "AGUARDAR", av: "PREÇO JUSTO", pot: "MUITO POTENCIAL", nota: "Retalho de mobiliário de luxo." },
-      { t: "NIKE", n: "Nike Inc.", s: "Consumo", tipo: "DIVIDENDOS", p: "$78.20", pe: "24.5", dec: "AGUARDAR", av: "BARATO", pot: "BOM POTENCIAL", nota: "Em processo de reestruturação de canais." },
       { t: "LCID", n: "Lucid Group", s: "Consumo", tipo: "ACUMULATIVO", p: "$2.25", pe: "Prejuízo", dec: "NÃO COMPRAR", av: "MUITO CARO", pot: "POUCO", nota: "Prejuízos massivos e diluição acionista." },
       { t: "GOOGL", n: "Alphabet (Google)", s: "Comunicações", tipo: "ACUMULATIVO", p: "$172.50", pe: "21.4", dec: "COMPRAR", av: "BARATO", pot: "MUITO POTENCIAL", nota: "A mais barata das Big Tech." },
       { t: "META", n: "Meta Platforms", s: "Comunicações", tipo: "ACUMULATIVO", p: "$580.00", pe: "26.5", dec: "COMPRAR", av: "PREÇO JUSTO", pot: "MUITO POTENCIAL", nota: "Monopólio das redes sociais e foco em IA." },
@@ -271,7 +275,6 @@
       { t: "VRT", n: "Vertiv Holdings", s: "Indústria", tipo: "ACUMULATIVO", p: "$112.50", pe: "32.0", dec: "COMPRAR", av: "PREÇO JUSTO", pot: "MUITO POTENCIAL", nota: "Refrigeração e energia para Data Centers de IA." },
       { t: "ETN", n: "Eaton Corp.", s: "Indústria", tipo: "DIVIDENDOS", p: "$332.10", pe: "29.5", dec: "COMPRAR", av: "PREÇO JUSTO", pot: "MUITO POTENCIAL", nota: "Equipamento elétrico essencial para redes." },
       { t: "EME", n: "Emcor Group", s: "Indústria", tipo: "DIVIDENDOS", p: "$410.00", pe: "26.0", dec: "COMPRAR", av: "PREÇO JUSTO", pot: "MUITO POTENCIAL", nota: "Construção elétrica ligada a infraestruturas." },
-      { t: "GLW", n: "Corning Inc.", s: "Indústria", tipo: "DIVIDENDOS", p: "$45.80", pe: "21.0", dec: "COMPRAR", av: "BARATO", pot: "MUITO POTENCIAL", nota: "Fibra ótica e vidro avançado." },
       { t: "MOD", n: "Modine Manufacturing", s: "Indústria", tipo: "ACUMULATIVO", p: "$135.00", pe: "22.0", dec: "COMPRAR", av: "BARATO", pot: "MUITO POTENCIAL", nota: "Gestão térmica para data centers." },
       { t: "FCX", n: "Freeport-McMoRan", s: "Indústria", tipo: "DIVIDENDOS", p: "$46.20", pe: "21.0", dec: "COMPRAR", av: "BARATO", pot: "MUITO POTENCIAL", nota: "Produtor líder de cobre para eletrificação." },
       { t: "BA", n: "Boeing Co.", s: "Indústria", tipo: "DIVIDENDOS", p: "$155.00", pe: "Prejuízo", dec: "NÃO COMPRAR", av: "CARO", pot: "POUCO", nota: "Problemas crónicos de produção e dívida." },
@@ -356,7 +359,10 @@
       document.getElementById("contador").innerText = `${min}:${seg}`;
     }, 1000);
 
-    renderizar();
+    // Executa a renderização assim que a página estiver carregada
+    window.onload = function() {
+      renderizar();
+    };
   </script>
 </body>
 </html>
